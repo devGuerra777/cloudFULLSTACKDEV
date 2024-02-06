@@ -30,6 +30,8 @@ services:
       - ${SSL_ROUTE_DIR}:${SSL_ROUTE_DIR}
     working_dir: /usr/src/app
     environment:
+      SSL_ROUTE_PRIV_KEY: ${SSL_ROUTE_PRIV_KEY}
+      SSL_ROUTE_PUBLIC_KEY: ${SSL_ROUTE_PUBLIC_KEY}
       MYSQL_HOST: mysql
       MYSQL_USER: 'root'
       MYSQL_PASSWORD: ${MYSQL_ROOT_PASSWORD}
