@@ -3,7 +3,7 @@ version: '3'
 services:
   mysql:
     image: mysql:latest
-    container_name: mysql_instance
+    container_name: smarthomedashboard_mysql
     environment:
       UPLOAD_LIMIT: ${UPLOAD_LIMIT}
       MYSQL_ROOT_HOST: ${MYSQL_ROOT_HOST}
@@ -27,6 +27,7 @@ services:
     container_name: nodeapp
     volumes:
       - .:/usr/src/app
+      - ${SSL_ROUTE_DIR}:${SSL_ROUTE_DIR}
     working_dir: /usr/src/app
     environment:
       MYSQL_HOST: mysql

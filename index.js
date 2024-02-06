@@ -1,12 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
-
+const https = require("https");
+const fs = require("fs");
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//database settings
+// database settings
 const db = mysql.createConnection({
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
@@ -24,11 +25,21 @@ global.db = db;
 
 require("./routes/main")(app);
 
-//import bootstrap
+// import bootstrap
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
 app.engine("html", require("ejs").renderFile);
 
-app.listen(process.env.WEBAPP_SERVER_PORT, () => console.log(`App listening on port ${process.env.WEBAPP_SERVER_PORT}!`, `\n*** Please go to localhost:${process.env.WEBAPP_SERVER_PORT}/home ***`));
+// SSL certificate options
+const options = {
+  key: fs.readFileSync(process.env.SSL_ROUTE_PRIV_KEY),
+  cert: fs.readFileSync(process.env.SSL_ROUTE_PUBLIC_KEY),
+};
+
+// create HTTPS server
+https.createServer(options, app).listen(process.env.WEBAPP_SERVER_PORT, () => {
+  console.log(`App listening on port ${process.env.WEBAPP_SERVER_PORT}!`);
+  console.log(`Please go to https://localhost:${process.env.WEBAPP_SERVER_PORT}/home`);
+});
