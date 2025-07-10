@@ -1,7 +1,4 @@
-DROP DATABASE IF EXISTS `coursework_database`;
-CREATE DATABASE `coursework_database`;
-
-USE `coursework_database`;
+USE `railway`;
 
 DROP TABLE IF EXISTS `table_userAddedSmartDevices`;
 CREATE TABLE `table_userAddedSmartDevices` (
