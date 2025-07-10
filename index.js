@@ -1,45 +1,40 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
-const https = require("https");
-const fs = require("fs");
 const app = express();
+const fs = require("fs");
 
+// Middlewares
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// database settings
-const db = mysql.createConnection({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE
-});
-// connect to database
-db.connect((err) => {
-  if (err) {
-    throw err;
-  }
-  console.log("Connected to database");
-});
-global.db = db;
-
-require("./routes/main")(app);
-
-// import bootstrap
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
 app.engine("html", require("ejs").renderFile);
 
-// SSL certificate options
-const options = {
-  key: fs.readFileSync(process.env.SSL_ROUTE_PRIV_KEY),
-  cert: fs.readFileSync(process.env.SSL_ROUTE_PUBLIC_KEY),
-};
+// DB config
+const db = mysql.createConnection({
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE
+});
 
-// create HTTPS server
-https.createServer(options, app).listen(process.env.WEBAPP_SERVER_PORT, () => {
-  console.log(`App listening on port ${process.env.WEBAPP_SERVER_PORT}!`);
-  console.log(`Please go to https://localhost:${process.env.WEBAPP_SERVER_PORT}/home`);
+db.connect((err) => {
+  if (err) {
+    console.error("❌ Error conectando a la base de datos:", err);
+    process.exit(1);
+  }
+  console.log("✅ Conectado a la base de datos");
+});
+global.db = db;
+
+// Rutas
+require("./routes/main")(app);
+
+// Escucha HTTP normal (Railway pone HTTPS automáticamente)
+const PORT = process.env.WEBAPP_SERVER_PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 App corriendo en puerto ${PORT}`);
+  console.log(`🌐 Abre: https://<tu-nombre-de-proyecto>.up.railway.app/home`);
 });
