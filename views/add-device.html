@@ -12,7 +12,7 @@
 <body class=" h-100 text-white bg-dark">    
     <div class="cover-container w-100 h-100 ">
         <header class="mb-auto">
-            <nav class="navbar navbar-expand navbar-dark bg-white">
+            <nav class="navbar navbar-expand navbar-dark bg-dark">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#">Smart Control Center</a>
 
@@ -49,7 +49,7 @@
                     <form id="formAddDeviceStep1" action="/addNewDevice" method="GET" >                    
                         <div class="mb-3">
                             <label class="form-label">Choose a Smart Device from the list</label>                            
-                            <select class="form-select w-100 text-white" name="smartdevice_type" style="align-self: center;">
+                            <select class="form-select w-100" name="smartdevice_type" style="align-self: center;">
                                 <% smartDevicesTypes.forEach(function (deviceType){ %>
                                     <option><%= deviceType.slice(1,-1) %></option>
                                 <% }) %>
@@ -62,7 +62,7 @@
             <% } %>
             <% if(stepTwo){ %>
                             
-                <div class="container card bg-dark border-white mx-5 px-5 mb-5 py-5" style="max-width: 70%;" >                                    
+                <div class="container card bg-white border-white mx-5 px-5 mb-5 py-5" style="max-width: 70%;" >                                    
                     <form id="formAddDeviceStep2" action="/addNewDevice" method="POST" style="display: none;"></form>
                     <% 
                         switch(deviceChosen) {
